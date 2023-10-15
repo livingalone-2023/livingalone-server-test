@@ -66,6 +66,21 @@ app.get('/following/:user_id', (req, res) => {
   });
 });
 
+// 게시판 글 올리는 API
+app.post('/board', (req, res) => {
+  const {board_title, user_id, user_name, board_content} = req.body;
+
+  // MySQL 데이터베이스에 게시글 추가
+  const query = 'INSERT INTO board (board_title, user_id, user_name, board_content) VALUES (?, ?, ?, ?)';
+  db.query(query, [board_title, user_id, user_name, board_content], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json({ message: '게시되었습니다.' });
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`서버가 ${port} 포트에서 실행 중입니다.`);
