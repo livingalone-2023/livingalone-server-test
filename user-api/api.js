@@ -81,6 +81,25 @@ app.post('/board', (req, res) => {
   });
 });
 
+app.post('/login', (req, res) => {
+  const { user_id, user_password } = req.body;
+
+  // MySQL 데이터베이스에서 사용자 정보 확인
+  const query = 'SELECT * FROM users WHERE user_id = ? AND user_password = ?';
+  db.query(query, [user_id, user_password], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (results.length > 0) {
+      // 유효한 사용자인 경우
+      res.json({ message: '로그인 성공' });
+    } else {
+      // 사용자 정보가 일치하지 않는 경우
+      res.status(401).json({ error: '로그인 실패' });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`서버가 ${port} 포트에서 실행 중입니다.`);
