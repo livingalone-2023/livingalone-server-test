@@ -93,13 +93,17 @@ app.post('/login', (req, res) => {
 
     if (results.length > 0) {
       // 유효한 사용자인 경우
-      res.json({ message: '로그인 성공' });
+      const user = results[0]; // 첫 번째 사용자 정보를 가져옴
+
+      
+      res.json({ message: '로그인 성공', user: user });
     } else {
-      // 사용자 정보가 일치하지 않는 경우
+      
       res.status(401).json({ error: '로그인 실패' });
     }
   });
 });
+
 
 app.listen(port, () => {
   console.log(`서버가 ${port} 포트에서 실행 중입니다.`);
