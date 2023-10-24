@@ -66,8 +66,19 @@ app.get('/following/:user_id', (req, res) => {
   });
 });
 
-// 게시판 글 올리는 API
-app.post('/board', (req, res) => {
+// 게시판 글 목록 가져오는 API
+app.get('/board', (req, res) => {
+  const query = 'SELECT board_no, board_title, user_name FROM board';
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ result: results });
+  });
+});
+
+// 게시판 글 쓰는 API
+app.post('/board/write', (req, res) => {
   const {board_title, user_id, user_name, board_content} = req.body;
 
   // MySQL 데이터베이스에 게시글 추가
