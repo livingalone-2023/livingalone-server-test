@@ -7,7 +7,7 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '0000',
+  password: 'mljs0617!!',
   database: 'livingalone',
 });
 
@@ -66,8 +66,8 @@ app.get('/following/:user_id', (req, res) => {
   });
 });
 
-// 게시판 글 목록 가져오는 API
-app.get('/board', (req, res) => {
+// 게시판 글 목록 가져오는 API (모든 사용자가 접근 가능)
+app.get('/board', (req, res) => { // 게시판 페이지 누르면 default로 목록이 나와야하니까 /board
   const query = 'SELECT board_no, board_title, user_name FROM board';
   db.query(query, (err, results) => {
     if (err) {
@@ -91,18 +91,6 @@ app.post('/board/write', (req, res) => {
     res.json({ message: '게시되었습니다.' });
   });
 });
-
-// 게시판 글 목록 가져오는 API (모든 사용자가 접근 가능)
-app.get('/showboard', (req, res) => {
-  const query = 'SELECT board_no, board_title, user_id, user_name, board_content FROM board';
-  db.query(query, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ result: results });
-  });
-});
-
 
 
 app.post('/login', (req, res) => {
