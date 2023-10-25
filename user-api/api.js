@@ -92,6 +92,19 @@ app.post('/board/write', (req, res) => {
   });
 });
 
+// 게시판 글 목록 가져오는 API (모든 사용자가 접근 가능)
+app.get('/showboard', (req, res) => {
+  const query = 'SELECT board_no, board_title, user_id, user_name, board_content FROM board';
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ result: results });
+  });
+});
+
+
+
 app.post('/login', (req, res) => {
   const { user_id, user_password } = req.body;
 
