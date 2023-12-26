@@ -92,6 +92,31 @@ app.post('/board/write', (req, res) => {
   });
 });
 
+// 회원가입 중복 확인 API
+app.post('/signup', (req, res) => {
+  const { user_id, user_name, user_password, user_email } = req.body;
+
+  const checkQuery = 'SELECT * FROM users WHERE user_id = ? OR user_email = ?';
+  db.query(checkQuery, [user_id, user_email], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (results.length > 0) {
+      res.status(400).json({ error: '이미 가입된 사용자입니다.' });
+    } else {
+      const insertQuery = 'INSERT INTO users (user_id, user_name, user_password, user_email) VALUES (?, ?, ?, ?)';
+      db.query(insertQuery, [user_id, user_name, user_password, user_email], (err, results) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({ message: '회원가입이 완료되었습니다.' });
+      });
+    }
+  });
+});
+
 
 app.post('/login', (req, res) => {
   const { user_id, user_password } = req.body;
