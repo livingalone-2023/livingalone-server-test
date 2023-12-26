@@ -1,32 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
+const crypto = require('crypto');
 
 // MySQL 연결 설정
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '0000',
+  password: '1234',
   database: 'livingalone',
 });
 
-router.post('/', (req, res) => {
-  // 사용자 정보 저장 API
-  const { user_id, user_name, user_password, user_email } = req.body;
+// router.post('/', (req, res) => {
+//   // 사용자 정보 저장 API
+//   const { user_id, user_name, user_password = crypto.createHash('sha512').update(user_password).digest('base64'), user_email } = req.body;
 
-  const query = 'INSERT INTO users (user_id, user_name, user_password, user_email) VALUES (?, ?, ?, ?)';
-  db.query(query, [user_id, user_name, user_password, user_email], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
+//   const query = 'INSERT INTO users (user_id, user_name, user_password, user_email) VALUES (?, ?, ?, ?)';
+//   db.query(query, [user_id, user_name, user_password, user_email], (err, results) => {
+//     if (err) {
+//       return res.status(500).json({ error: err.message });
+//     }
 
-    res.json({ message: '사용자 정보가 성공적으로 저장되었습니다.' });
-  });
-});
+//     res.json({ message: '사용자 정보가 성공적으로 저장되었습니다.' });
+//   });
+// });
 
 router.post('/signup', (req, res) => {
   // 회원가입 중복 확인 API
-  const { user_id, user_name, user_password, user_email } = req.body;
+  let { user_id, user_name, user_password, user_email } = req.body;
+  user_password = crypto.createHash('sha512').update(user_password).digest('base64');
 
   const checkQuery = 'SELECT * FROM users WHERE user_id = ? OR user_email = ?';
   db.query(checkQuery, [user_id, user_email], (err, results) => {
