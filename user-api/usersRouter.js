@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
+const crypto = require('crypto');
 
 // MySQL 연결 설정
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '0000',
+  password: '1234',
   database: 'livingalone',
 });
 
@@ -26,7 +27,7 @@ router.post('/', (req, res) => {
 
 router.post('/signup', (req, res) => {
   // 회원가입 중복 확인 API
-  const { user_id, user_name, user_password, user_email } = req.body;
+  const { user_id, user_name, user_password = crypto.createHash('sha512').update(user_password).digest('base64'), user_email } = req.body;
 
   const checkQuery = 'SELECT * FROM users WHERE user_id = ? OR user_email = ?';
   db.query(checkQuery, [user_id, user_email], (err, results) => {
@@ -37,6 +38,9 @@ router.post('/signup', (req, res) => {
     if (results.length > 0) {
       res.status(400).json({ error: '이미 가입된 사용자입니다.' });
     } else {
+      // 사용자 비밀번호 암호화
+      const crypto_user_password = crypto.createHash('sha512').update(user_password).digest('base64');
+
       const insertQuery = 'INSERT INTO users (user_id, user_name, user_password, user_email) VALUES (?, ?, ?, ?)';
       db.query(insertQuery, [user_id, user_name, user_password, user_email], (err, results) => {
         if (err) {
