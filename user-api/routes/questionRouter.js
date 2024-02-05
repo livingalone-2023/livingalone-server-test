@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { Question, User } = require('../models');
+
 
 // 질문 등록 API
 router.post('/', async (req, res) => {
   try {
-    const { title, content, user_id } = req.body;
+    const { title, content, user_id} = req.body;
 
     // 질문 등록
     const question = await Question.create({
