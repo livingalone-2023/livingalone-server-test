@@ -36,10 +36,13 @@ const usersRouter = require('./routes/usersRouter');
 const boardsRouter = require('./routes/boardsRouter');
 const followRouter = require('./routes/followRouter');
 const authRouter = require('./routes/authRouter');
-
+const answerRouter=require('./routes/answerRouter');
+const questionRouter=require('./routes/questionRouter');
 app.use(express.json());
 
 app.use('/users', usersRouter);
 app.use('/boards', boardsRouter);
 app.use('/follow', followRouter);
 app.use('/auth', authRouter);
+app.use('/question',questionRouter);
+app.use('/answer',answerRouter);
