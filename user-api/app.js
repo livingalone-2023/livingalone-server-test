@@ -6,7 +6,8 @@ const port = 3000;
 // Sequelize 연결 설정
 const sequelize = new Sequelize( 'livingalone', 'root','0000', {
   host: 'localhost',
-  dialect: 'mysql'
+  dialect: 'mysql',
+  logging:false,
 });
 
 // 모델 정의
@@ -46,3 +47,4 @@ app.use('/follow', followRouter);
 app.use('/auth', authRouter);
 app.use('/question',questionRouter);
 app.use('/answer',answerRouter);
+module.exports = { sequelize };
